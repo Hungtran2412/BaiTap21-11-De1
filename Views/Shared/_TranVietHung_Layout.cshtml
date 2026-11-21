@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AssetHub - Quản lý tài sản doanh nghiệp</title>
+    <link href="~/css/layout.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+   @await Html.PartialAsync("_TranVietHung_Header")
+   <main class="main">
+       <div class="container" id="main-content-container">
+           @RenderBody()
+       </div>
+   </main>
+   
+    @await Html.PartialAsync("_TranVietHung_Footer")
+    <div class="to-top">&uarr;</div>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/main.js"></script>
+    <script>
+        $(document).on("click", ".nav-asset-link", function (e){
+            e.preventDefault();
+
+            var $link = $(this);
+            var maLoai = $link.data("ma-loai");
+            var tenLoai = $link.data("ten-loai");
+
+            $(".navbar .menu li").removeClass("active");
+            $link.closest("li").addClass("active");
+
+            $.ajax({
+                url: "/Home/LocTheoLoai",
+                type: "GET",
+                data: {maLoai: maLoai, tenLoai: tenLoai},
+                success: function(html){
+                    $("#main-content-container").hmtl(html);
+                },
+                error: function(xhr){
+                    console.log("Loi AJAX:", xhr.status, xhr.responseText);
+                }
+            });
+            }
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
